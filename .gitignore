@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Secret data
+sensors/essid_secrets.h
+

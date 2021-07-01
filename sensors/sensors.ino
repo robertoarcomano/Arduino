@@ -1,7 +1,48 @@
 
 #include "DHTesp.h"
+#include <WiFi.h>
+#include <PubSubClient.h>
+#include "essid_secrets.h"
+
 #define DHTPIN 4
+const char* mqttServer = "192.168.10.28";
+const int mqttPort = 1883;
+
 DHTesp dht;  
+WiFiClient espClient;
+PubSubClient client(espClient);
+struct sensorDataType {
+  String embeddedTemperature;
+  String temperature;
+  String humidity;
+};
+
+void initWifi() {
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());  
+}
+
+void initMqtt() {
+  client.setServer(mqttServer, mqttPort);
+  while (!client.connected()) {
+    Serial.println("Connecting to MQTT...");
+  
+    if (client.connect("ESP32Client")) {
+      Serial.println("connected");  
+    } else {
+      Serial.print("failed with state ");
+      Serial.print(client.state());
+      delay(2000);
+    }
+  }
+}
 
 void setup() {
   Serial.begin(9600);
@@ -9,14 +50,34 @@ void setup() {
   analogSetAttenuation(ADC_11db); 
   TaskHandle_t tempTaskHandle = NULL;
   dht.setup(DHTPIN, DHTesp::DHT11);
+  // Init Wifi
+  initWifi();
+  initMqtt();
 }
-void loop() {
+
+sensorDataType getData() {
+  sensorDataType sensorData;
+  
   int digital=analogRead(36);  
   float volt=3.3*digital/4096;
-  float embedded_temperature=100*volt-40;
-  Serial.print("Embedded Temperature: " + String(embedded_temperature));  
+  float embeddedTemperature=100*volt-40;
   TempAndHumidity lastValues = dht.getTempAndHumidity();
-  Serial.print(" Temperature: " + String(lastValues.temperature,0));
-  Serial.println(" Humidity: " + String(lastValues.humidity,0));
+
+  sensorData.embeddedTemperature = String(embeddedTemperature,0);
+  sensorData.temperature = String(lastValues.temperature,0);
+  sensorData.humidity = String(lastValues.humidity,0);
+  
+  return sensorData;   
+};
+
+void loop() {
+  sensorDataType sensorData = getData();
+  Serial.print("Embedded Temperature: " + sensorData.embeddedTemperature);  
+  Serial.print(" Temperature: " + sensorData.temperature);
+  Serial.println(" Humidity: " + sensorData.humidity);
+  
+  client.publish("esp/embeddedTemperature", sensorData.embeddedTemperature.c_str());
+  client.publish("esp/temperature", sensorData.temperature.c_str());
+  client.publish("esp/humidity", sensorData.humidity.c_str());
   delay(2000);
 }
