@@ -4,10 +4,6 @@
 #include <PubSubClient.h>
 #include "essid_secrets.h"
 
-#define DHTPIN 4
-const char* mqttServer = "192.168.10.28";
-const int mqttPort = 1883;
-
 DHTesp dht;  
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -16,6 +12,10 @@ struct sensorDataType {
   String temperature;
   String humidity;
 };
+
+#define DHTPIN 4
+const char* mqttServer = "192.168.10.253";
+const int mqttPort = 1883;
 
 void initWifi() {
   WiFi.begin(ssid, password);
@@ -29,6 +29,11 @@ void initWifi() {
   Serial.println(WiFi.localIP());  
 }
 
+void resetWifi() {
+  WiFi.disconnect();
+  initWifi();
+}
+
 void initMqtt() {
   client.setServer(mqttServer, mqttPort);
   while (!client.connected()) {
@@ -40,8 +45,14 @@ void initMqtt() {
       Serial.print("failed with state ");
       Serial.print(client.state());
       delay(2000);
+      
     }
   }
+}
+
+void resetMqtt() {
+  client.disconnect();
+  initMqtt();
 }
 
 void setup() {
@@ -50,8 +61,9 @@ void setup() {
   analogSetAttenuation(ADC_11db); 
   TaskHandle_t tempTaskHandle = NULL;
   dht.setup(DHTPIN, DHTesp::DHT11);
-  // Init Wifi
+  // Init wifi
   initWifi();
+  // Init mqtt
   initMqtt();
 }
 
@@ -79,5 +91,7 @@ void loop() {
   client.publish("esp/embeddedTemperature", sensorData.embeddedTemperature.c_str());
   client.publish("esp/temperature", sensorData.temperature.c_str());
   client.publish("esp/humidity", sensorData.humidity.c_str());
-  delay(2000);
+  delay(10000);
+  resetWifi();
+  resetMqtt();
 }
