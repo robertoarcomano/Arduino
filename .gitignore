@@ -34,3 +34,5 @@
 # Secret data
 sensors/essid_secrets.h
 
+# Idea
+.idea
