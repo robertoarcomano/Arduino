@@ -1,6 +1,10 @@
 # Sensors_ESPertino
 Arduino code for ESPertino: sensors values retrieving and publishing using MQTT
 
+## Overview
+Espertino card collects temperatures and humidity and send them to the Raspberry Pi 2 based MQTT broker.
+To see data we need to be subscribing to sensors at the same time (sensors data are never stored) 
+
 ## Hardware
 #### ESPertino-32 card with ESP32-WROOM and Temperature & Humidity sensors
 <img src=espertino.jpg>
@@ -115,7 +119,7 @@ sudo apt install mosquitto
 #### Test subscribe
 ```
 berto@clevo:~$ mosquitto_sub -h 192.168.10.253 -t esp/embeddedTemperature -t esp/temperature -t esp/humidity -v
-esp/embeddedTemperature 34
+esp/embeddedTemperature 27
 esp/temperature 27
 esp/humidity 59
 ```
