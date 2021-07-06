@@ -33,6 +33,11 @@ void initWifi() {
   Serial.println(WiFi.localIP());  
 }
 
+void resetWifi() {
+  WiFi.disconnect();
+  initWifi();
+}
+
 void initMqtt() {
   client.setServer(mqttServer, mqttPort);
   while (!client.connected()) {
@@ -45,6 +50,11 @@ void initMqtt() {
       delay(2000);      
     }
   }
+}
+
+void resetMqtt() {
+  client.disconnect();
+  initMqtt();
 }
 
 void setup() {
@@ -103,4 +113,6 @@ void loop() {
 
   // Wait for DELAY (1 minute)
   delay(DELAY);
+  resetWifi();
+  resetMqtt();
 }
