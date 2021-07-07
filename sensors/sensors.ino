@@ -13,14 +13,11 @@ struct sensorDataType {
 };
 
 #define DELAY 60000   // 1 minute between 2 readings
-//#define MAX_COUNT 60  // 60 * 1 minute = 1h Reboot every hour
 #define DHTPIN 4      // Pin 4 where DHT sensor is connected
-//#define RESETPIN 16   // Reset PIN is connected to PIN 16
 #define MQTT_NAME "Espertino Sensors"
 
 const char* mqttServer = "192.168.10.253";
 const int mqttPort = 1883;
-//unsigned long count = 0;
 
 void initWifi() {
   WiFi.begin(ssid, password);
@@ -90,19 +87,11 @@ void loop() {
   Serial.print("Embedded Temperature: " + sensorData.embeddedTemperature);  
   Serial.print(" Temperature: " + sensorData.temperature);
   Serial.println(" Humidity: " + sensorData.humidity);
-//  Serial.println("count: " + String(count));
 
   // Publish values
   client.publish("esp/embeddedTemperature", sensorData.embeddedTemperature.c_str());
   client.publish("esp/temperature", sensorData.temperature.c_str());
   client.publish("esp/humidity", sensorData.humidity.c_str());
-
-//  // If we reached 1 hour => Reset
-//  if (count > MAX_COUNT) {
-//    pinMode(RESETPIN, OUTPUT);
-//    digitalWrite(RESETPIN, LOW);
-//  } else
-//    count = count + 1;
 
   // Wait for DELAY (1 minute)
   delay(DELAY);

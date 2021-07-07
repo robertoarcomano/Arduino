@@ -90,7 +90,6 @@ void setup() {
   // Init console
   Serial.begin(9600);
 
-  // Configure Sensor
   // Init Wifi
   initWifi();
 
@@ -120,16 +119,4 @@ void loop() {
 
   // Just wait
   client.loop();
-  
-//  // If we reached 1 hour => Reset
-//  if (count > MAX_COUNT) {
-//    pinMode(RESETPIN, OUTPUT);
-//    digitalWrite(RESETPIN, LOW);
-//  } else
-//    count = count + 1;
-
-//   Wait for DELAY (1 minute)
-//  delay(DELAY);
-//  resetWifi();
-//  resetMqtt();
 }
