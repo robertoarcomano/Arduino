@@ -15,7 +15,7 @@ To see data we need to be subscribing to the sensors at the same time (sensors d
 <img src=raspberry2.jpg width="200px">
 
 #### Grafana output
-<img src=grafana.jpg width="200px">
+<img src=grafana.jpg width="800px">
 
 ## Software
 #### Arduino code
