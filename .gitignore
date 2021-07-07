@@ -32,7 +32,7 @@
 *.app
 
 # Secret data
-sensors/essid_secrets.h
+essid_secrets.h
 
 # Idea
 .idea
