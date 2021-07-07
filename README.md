@@ -14,6 +14,9 @@ To see data we need to be subscribing to the sensors at the same time (sensors d
 #### Raspberry Pi 2 with Ubuntu 20.04
 <img src=raspberry2.jpg width="200px">
 
+#### Grafana output
+<img src=grafana.jpg width="200px">
+
 ## Software
 #### Arduino code
 <a href=sensors/sensors.ino>sensors</a>
