@@ -9,10 +9,10 @@ To see data we need to be subscribing to the sensors at the same time (sensors d
 
 ## Hardware
 #### ESPertino-32 card with ESP32-WROOM and Temperature & Humidity sensors
-<img src=espertino.jpg>
+<img src=espertino.jpg width="200px">
 
 #### Raspberry Pi 2 with Ubuntu 20.04
-<img src=raspberry2.jpg>
+<img src=raspberry2.jpg width="200px">
 
 ## Software
 #### Arduino code
